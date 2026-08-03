@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kat Solutions Next.js"
+  short_description: "Build and maintain the Kat Solutions website"
+  default_prompt: "Build or update the Kat Solutions Next.js website using its project rules and Figma design."
