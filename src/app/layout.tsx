@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "KAT Solutions | Great Transformations Start Small",
   description:
     "KAT Solutions đồng hành cùng doanh nghiệp và nhà máy trong hành trình số hóa và tự động hóa.",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
