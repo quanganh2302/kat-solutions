@@ -63,6 +63,36 @@ proxied. Apply these to the child project:
    the new env takes effect.
 4. Verify `https://www.kat-solutions.net/demo/<slug>` serves the child app.
 
+## Working with Vercel (this account)
+
+There is no Vercel MCP — drive the dashboard via the browser tools (claude-in-chrome),
+which already has the user's Vercel session logged in.
+
+- **Team / account:** `anhdoanquang98gmailcoms-projects` (Hobby plan), login
+  anh.doanquang98@gmail.com. Existing projects include `lth-hethong` (VSA) and `kat-solutions`.
+- **URL patterns** (`<team>` = `anhdoanquang98gmailcoms-projects`):
+  - Deployments list: `https://vercel.com/<team>/<project>/deployments`
+  - A deployment (build logs): open a row → **Deployment** tab → **Deploy Logs** panel
+  - Env vars: `.../<project>/settings/environment-variables`
+  - Framework preset / build: `.../<project>/settings/build-and-deployment`
+  - Production branch: `.../<project>/settings/environments` → **Production** → Branch Tracking
+  - Git connection / webhook status: `.../<project>/settings/git`
+- **Add an env var:** Env vars page → **Add Environment Variable** → Key + Value
+  (paste WITHOUT surrounding quotes) → turn **Sensitive OFF** for non-secret config (e.g. a
+  public URL) so it stays viewable/editable → Environments = **Production and Preview** → Save.
+  A toast offers **Redeploy** — env changes only take effect after a redeploy.
+- **Redeploy correctly:** the generic "Redeploy" reuses the *current production* deployment's
+  source (often the wrong branch). To rebuild a specific branch/commit, open THAT deployment
+  from the Deployments list and Redeploy from its page, or push a new commit to its branch.
+- **Reading a failed build:** open the errored deployment → the red "Build Failed" box shows the
+  top-line reason; the **Deploy Logs** panel is virtualized, so use its **Find in logs** search
+  box (e.g. search `rror`) to jump to the real error instead of scrolling.
+- **Deployments list filter:** the Status filter defaults to hiding "Canceled" (shows 6/7);
+  enable all 7 if a deployment seems missing. Also check All Branches / All Environments.
+- **First import quirk:** the initial import build runs directly (not via the git webhook), so a
+  broken webhook still produces one deployment — don't assume auto-deploy works until a *push*
+  produces a new deployment.
+
 ## Gotchas cheat-sheet
 - Root `/` of both domains → 404 for the child app. Always link `/demo/<slug>`.
 - Vercel env values: never include surrounding `"`.
