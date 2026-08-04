@@ -1,18 +1,33 @@
 import type { NextConfig } from "next";
 
-// Origin of the VSA demo (its own Vercel project), e.g. "https://vsa-demo.vercel.app".
-// Set VSA_DEMO_ORIGIN in Vercel env; leave unset locally to disable the proxy.
-const VSA_DEMO_ORIGIN = process.env.VSA_DEMO_ORIGIN;
+/**
+ * Demo multi-zone proxy.
+ *
+ * Each entry is a slug served at `/demo/<slug>` that is proxied to its own Vercel
+ * deployment (a separate Next.js app that serves itself under basePath `/demo/<slug>`).
+ * The target origin is read from env `<SLUG>_DEMO_ORIGIN` (slug uppercased), e.g.
+ * slug "vsa" -> env `VSA_DEMO_ORIGIN=https://lth-hethong.vercel.app`.
+ *
+ * To add a new demo:
+ *   1. Add its slug to DEMO_ZONES below.
+ *   2. Set env `<SLUG>_DEMO_ORIGIN` on the Kat Vercel project.
+ *   3. Redeploy Kat.
+ * See .claude/skills/add-demo-zone/SKILL.md for the full playbook.
+ */
+const DEMO_ZONES = ["vsa"];
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    if (!VSA_DEMO_ORIGIN) return [];
-    // Multi-zone: transparently proxy /demo/vsa/* to the VSA deployment (which serves
-    // itself under basePath "/demo/vsa"), so katsolutions.com/demo/vsa runs the VSA app.
-    return [
-      { source: "/demo/vsa", destination: `${VSA_DEMO_ORIGIN}/demo/vsa` },
-      { source: "/demo/vsa/:path*", destination: `${VSA_DEMO_ORIGIN}/demo/vsa/:path*` },
-    ];
+    const rules = [];
+    for (const slug of DEMO_ZONES) {
+      const origin = process.env[`${slug.toUpperCase()}_DEMO_ORIGIN`];
+      if (!origin) continue; // zone disabled until its origin env is set
+      rules.push(
+        { source: `/demo/${slug}`, destination: `${origin}/demo/${slug}` },
+        { source: `/demo/${slug}/:path*`, destination: `${origin}/demo/${slug}/:path*` },
+      );
+    }
+    return rules;
   },
 };
 
