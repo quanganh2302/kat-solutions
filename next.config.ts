@@ -14,7 +14,7 @@ import type { NextConfig } from "next";
  *   3. Redeploy Kat.
  * See .claude/skills/add-demo-zone/SKILL.md for the full playbook.
  */
-const DEMO_ZONES = ["vsa"];
+const DEMO_ZONES = ["asa"];
 
 const nextConfig: NextConfig = {
   async rewrites() {
